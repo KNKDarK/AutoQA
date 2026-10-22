@@ -1,0 +1,30 @@
+[package]
+name = "autoqa_hybrid"
+version = "0.1.0"
+edition = "2021"
+description = "AutoQA native core: parallel screenshot diffing & DOM mutation deltas"
+license = "MIT"
+
+# The Python extension lives at `autoqa._native` (see pyproject.toml).
+# `extension-module` is enabled by maturin for wheel builds so that plain
+# `cargo test` can still link against libpython.
+[features]
+extension-module = ["pyo3/extension-module"]
+
+[lib]
+name = "autoqa_hybrid"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+pyo3 = { version = "0.30", features = ["abi3-py311"] }
+rayon = "1"
+
+[dev-dependencies]
+# Tests call pyfunctions directly, so the interpreter must be initializable.
+pyo3 = { version = "0.30", features = ["auto-initialize"] }
+
+[profile.release]
+
+opt-level = 3
+lto = true
+codegen-units = 1
